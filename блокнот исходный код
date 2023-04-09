@@ -1,0 +1,52 @@
+import tkinter
+import tkinter.filedialog as tfd
+import tkinter.messagebox as tkm
+window = tkinter.Tk()
+window.title("блакнот")
+window.geometry("400x400")
+text_a = tkinter.Text(window)
+text_a.place(x=0,y=0,relwidth=1,relheight=1)
+main_menu = tkinter.Menu(window)
+window.configure(menu=main_menu)
+file_name = ""
+def open_file():
+    text_a.delete(1.0,"end")
+    global file_name
+    file_name = tfd.askopenfilename()
+    with open(file_name)as file:
+        text_a.insert(1.0,file.read())
+def save_as_file():
+    global file_name
+    file_name = tfd.asksaveasfilename()
+    write_to_file(file_name)
+    content = text_a.get(1.0,"end")
+    with open(file_name,"w")as file:
+        file.write(content)
+def new():
+    global file_name
+    if tkm.askokcancel("Создание нового файла","Вы уверны? Не сохраненный текст будет удален"):
+        file_name=""
+        text_a.delete(1.0,"end")
+def save():
+    global file_name
+    if file_name=="":
+        save_as_file()
+    else:
+        content = text_a.get(1.0,"end")
+        with open(file_name,"w")as file:
+            file.write(content)
+def write_to_file(file_name):
+    content = content_text.get(1.0,"end")
+    with open(file_name,"w")as file:
+        file.write(content)
+file_menu = tkinter.Menu(main_menu,tearoff=0,bg="black",fg="gold")
+main_menu.add_cascade(label="menu",menu=file_menu)
+new_file_icon = tkinter.PhotoImage(file="new_file.gif")
+file_menu.add_command(label="новый",image=new_file_icon,compound="left",command=new)
+new_file_ic = tkinter.PhotoImage(file="open_file.gif")
+file_menu.add_command(label="открыть",image=new_file_ic,compound="left",command=open_file)
+new_file_ico = tkinter.PhotoImage(file="save_file.gif")
+file_menu.add_command(label="сохранить как...",image=new_file_ico,compound="left",command=save_as_file)
+file_menu.add_command(label="сохранить",command = save)
+window.mainloop()
+
